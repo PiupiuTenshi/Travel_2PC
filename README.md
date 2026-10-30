@@ -183,6 +183,4 @@ docker compose start coordinator
 
 **Tiếng Việt:** Student 1 cần bàn giao mã Coordinator, hợp đồng API/thông điệp, giải thích máy trạng thái/luồng giao tiếp, bằng chứng log bền vững và kết quả kiểm thử tích hợp. Các test với mock hiện chứng minh hành vi Coordinator, chưa chứng minh đặt chỗ nguyên tử qua hai database thật của Student 2.
 
-**English:** For file-by-file code explanations, a step-by-step implementation process, integration tasks and a presentation checklist, see [HUONG_DAN_DU_AN.md](HUONG_DAN_DU_AN.md).
 
-**Tiếng Việt:** Xem [HUONG_DAN_DU_AN.md](HUONG_DAN_DU_AN.md) để đọc giải thích từng tệp, quy trình xây dựng, công việc tích hợp còn lại và checklist thuyết trình.
