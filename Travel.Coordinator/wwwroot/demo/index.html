@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'self'">
+  <title>Student 1 — TP Monitor / 2PC Coordinator</title>
+  <link rel="stylesheet" href="/demo/style.css">
+  <script src="/demo/app.js" defer></script>
+</head>
+<body>
+  <header><div><span class="eyebrow">TRACK B · STUDENT 1 · .NET 10</span><h1>TP Monitor / 2PC Coordinator</h1><p>Trang kiểm tra giao dịch và nhật ký phục hồi của Coordinator.</p></div><span id="connection" role="status">Đang kết nối…</span></header>
+  <main>
+    <div id="notice" class="notice" role="status" aria-live="polite">Tạo một giao dịch để kiểm tra BEGIN, END và ABORT.</div>
+    <div class="layout">
+      <section class="panel">
+        <h2>Ba thao tác của TP Monitor</h2>
+        <div class="actions"><button id="begin" type="button" class="primary">BEGIN_TRANSACTION</button><button id="end" type="button" disabled>END_TRANSACTION</button><button id="abort" type="button" class="danger" disabled>ABORT_TRANSACTION</button></div>
+        <p class="hint">END gửi VOTE_REQUEST/PREPARE. Chỉ COMMIT khi cả hai bên YES. Sau quyết định COMMIT, không được ABORT.</p>
+        <label for="transaction-id">Transaction ID</label><div class="id-row"><input id="transaction-id" placeholder="Tạo giao dịch hoặc nhập GUID đã có" spellcheck="false" autocomplete="off"><button id="load" type="button">Xem</button></div>
+        <div class="status-row"><span>Trạng thái</span><strong id="tx-status" class="badge">CHƯA CHỌN</strong></div>
+        <div class="metrics"><div><span>ACK Airline</span><strong id="ack-airline">—</strong></div><div><span>ACK Hotel</span><strong id="ack-hotel">—</strong></div><div><span>Số lần lên lịch retry</span><strong id="retry-count">—</strong></div></div>
+        <div class="details"><p>Retry tiếp theo <b id="retry-at">—</b></p><p>ACTIVE hết hạn <b id="expires-at">—</b></p></div>
+        <div class="section-heading"><h2>Nhật ký 2PC trên đĩa</h2><span class="hint">Tự cập nhật sau mỗi lượt tải + 1,5 giây</span></div>
+        <ol id="event-log"><li class="empty">Chưa chọn giao dịch.</li></ol>
+      </section>
+      <aside>
+        <section class="panel"><h2>Phạm vi Student 1</h2><ul class="scope"><li>Cung cấp BEGIN / END / ABORT.</li><li>Thu phiếu và ra quyết định 2PC.</li><li>Lưu quyết định bền vững trước khi gửi.</li><li>Phục hồi và gửi lại quyết định thiếu ACK.</li></ul><p class="hint">Resource Manager và cơ sở dữ liệu Airline/Hotel: Student 2.<br>Client đặt chỗ, idempotency token và chaos injector: Student 3.</p></section>
+        <section class="panel"><span class="eyebrow">CHỈ DEVELOPMENT</span><h2>Kiểm chứng recovery</h2><div class="tools"><button id="pause" type="button">Tạm dừng gửi quyết định</button><button id="expire" type="button" disabled>Ép ACTIVE hết hạn</button><button id="preparing" type="button" disabled>Ghi PREPARING giả lập</button></div><p class="hint">PAUSE vẫn cho phép ghi quyết định xuống SQLite. Khởi động lại chỉ Coordinator để chứng minh quyết định được khôi phục. PREPARING giả lập không gửi PREPARE thật.</p><p id="timing-note" class="hint"></p></section>
+        <section class="panel"><h2>Cách đọc kết quả</h2><p class="hint"><b>COMMIT_DECIDED / ABORT_DECIDED:</b> đã lưu quyết định, còn chờ ACK.</p><p class="hint"><b>COMMITTED / ABORTED:</b> cả hai bên đã xác nhận quyết định.</p><p class="hint">Trang này là công cụ chẩn đoán cục bộ; việc kiểm thử với mock chưa thay thế tích hợp hai Resource Manager thật.</p></section>
+      </aside>
+    </div>
+    <section class="panel history"><div class="section-heading"><h2>30 giao dịch gần đây</h2><span class="hint">Chọn một giao dịch để xem lại</span></div><div id="recent"><p class="empty">Chưa có giao dịch.</p></div></section>
+  </main>
+  <footer>Student 1 · Một Coordinator · SQLite WAL và nhật ký logic TransactionLogs</footer>
+</body>
+</html>

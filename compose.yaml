@@ -1,0 +1,39 @@
+# Optional alternative: docker compose up --build -d
+# DEMO ONLY: /dev/* endpoints are enabled and mock participant state is in RAM.
+services:
+  airline:
+    build:
+      context: .
+      dockerfile: Travel.Participant.Mock/Dockerfile
+    ports:
+      - "5101:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+
+  hotel:
+    build:
+      context: .
+      dockerfile: Travel.Participant.Mock/Dockerfile
+    ports:
+      - "5102:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+
+  coordinator:
+    build:
+      context: .
+      dockerfile: Travel.Coordinator/Dockerfile
+    depends_on:
+      - airline
+      - hotel
+    ports:
+      - "5000:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Participants__Airline: http://airline:8080/
+      Participants__Hotel: http://hotel:8080/
+    volumes:
+      - coordinator_data:/app/data
+
+volumes:
+  coordinator_data:
